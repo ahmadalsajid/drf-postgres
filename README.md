@@ -18,8 +18,8 @@ courses. More details to be added with the progress.
 | **Task ID** | **Details**                                     | **Status**         | **Comment(s)** |
 |-------------|-------------------------------------------------|--------------------|----------------|
 | Task-1      | Create Django/DRF app outline                   | :white_check_mark: |                |
-| Task-2      | Create docker compose for Postgres and PG Admin | :x:                |                |
-| Task-3      | Create Django/DRF app                           | :x:                |                |
+| Task-2      | Create docker compose for Postgres and PG Admin | :white_check_mark: |                |
+| Task-3      | Create Django/DRF app                           | :white_check_mark: |                |
 | Task-4      | Define models                                   | :x:                |                |
 | Task-5      | Define Views and URLs                           | :x:                |                |
 | Task-6      | Write Tests                                     | :x:                |                |

@@ -1,0 +1,44 @@
+services:
+
+  api:
+    build: .
+    container_name: api
+    command: gunicorn --workers=3 --timeout=120 --bind 0.0.0.0:8000 university.wsgi --reload
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    hostname: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    hostname: pgadmin
+    restart: always
+    ports:
+      - 8888:80
+    env_file:
+      - .env
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+
+volumes:
+  local_pgdata:
+  pgadmin-data:
