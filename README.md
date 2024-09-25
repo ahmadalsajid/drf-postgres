@@ -11,7 +11,12 @@ create the teachers, students and courses. The teachers can assign courses to
 the students, list, modify all the details. Students can view their assigned 
 courses. More details to be added with the progress.
 
+## Docker 
 
+```
+$ docker compose up
+$ docker compose down --rmi local -v
+```
 
 ## Tasks
 
