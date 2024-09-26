@@ -3,7 +3,9 @@ services:
   api:
     build: .
     container_name: api
+    hostname: api
     command: gunicorn --workers=3 --timeout=120 --bind 0.0.0.0:8000 university.wsgi --reload
+    restart: unless-stopped
     volumes:
       - .:/app
     env_file:
@@ -17,7 +19,7 @@ services:
     image: postgres:latest
     container_name: postgres
     hostname: postgres
-    restart: always
+    restart: unless-stopped
     ports:
       - 5432:5432
     env_file:
@@ -29,7 +31,7 @@ services:
     image: dpage/pgadmin4:latest
     container_name: pgadmin
     hostname: pgadmin
-    restart: always
+    restart: unless-stopped
     ports:
       - 8888:80
     env_file:

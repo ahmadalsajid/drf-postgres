@@ -1,3 +1,10 @@
 from django.contrib import admin
+from .models import Course
 
-# Register your models here.
+
+class CourseAdmin(admin.ModelAdmin):
+    list_per_page = 30
+    list_display = ("name", "teacher")
+
+
+admin.site.register(Course, CourseAdmin)

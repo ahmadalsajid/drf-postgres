@@ -1,3 +1,26 @@
 from django.contrib import admin
+from .models import User, Teacher, Student
 
-# Register your models here.
+
+class UserAdmin(admin.ModelAdmin):
+    list_per_page = 30
+    list_display = ("username", "first_name", "last_name", "email")
+
+
+class TeacherAdmin(admin.ModelAdmin):
+    list_per_page = 30
+    list_display = ("teacher_id", )
+    search_fields = (
+        "teacher_id",
+        "address__address",
+    )
+
+
+class StudentAdmin(admin.ModelAdmin):
+    list_per_page = 30
+    list_display = ("registration", )
+
+
+admin.site.register(User, UserAdmin)
+admin.site.register(Teacher, TeacherAdmin)
+admin.site.register(Student, StudentAdmin)
