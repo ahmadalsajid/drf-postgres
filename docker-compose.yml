@@ -1,5 +1,18 @@
 services:
 
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: rabbitmq
+    hostname: rabbitmq
+    restart: unless-stopped
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    env_file:
+      - .env
+    ports:
+      - 5672:5672
+      - 15672:15672
+
   api:
     build: .
     container_name: api
@@ -14,6 +27,35 @@ services:
       - 8000:8000
     depends_on:
       - postgres
+      - rabbitmq
+
+  celery-worker:
+    build: .
+    container_name: celery-worker
+    hostname: celery-worker
+    command: celery -A university worker -l info
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+      - api
+
+  celery-beat:
+    build: .
+    container_name: celery-beat
+    hostname: celery-beat
+    command: celery -A university beat -l info
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+      - api
 
   postgres:
     image: postgres:latest
@@ -25,7 +67,7 @@ services:
     env_file:
       - .env
     volumes:
-      - local_pgdata:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -37,10 +79,11 @@ services:
     env_file:
       - .env
     volumes:
-      - pgadmin-data:/var/lib/pgadmin
+      - pgadmin_data:/var/lib/pgadmin
     depends_on:
       - postgres
 
 volumes:
-  local_pgdata:
-  pgadmin-data:
+  rabbitmq_data:
+  pg_data:
+  pgadmin_data:
