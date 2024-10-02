@@ -1,14 +1,14 @@
-#!/usr/bin/sh
+#!/usr/bin/bash
 
 if [ -f .env ]; then
-   . .env
+   source .env
 fi
 
-if [ "$DATABASE" = "postgres" ]
+if [[ "$DATABASE" = "postgres" ]]
 then
     echo "Waiting for postgres..."
 
-    while ! nc -z "$POSTGRES_HOST" "$POSTGRES_PORT"; do
+    while ! netcat -z "$POSTGRES_HOST" "$POSTGRES_PORT"; do
       sleep 0.1
     done
 

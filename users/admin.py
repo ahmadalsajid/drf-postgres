@@ -12,13 +12,15 @@ class TeacherAdmin(admin.ModelAdmin):
     list_display = ("teacher_id", )
     search_fields = (
         "teacher_id",
-        "address__address",
     )
 
 
 class StudentAdmin(admin.ModelAdmin):
     list_per_page = 30
-    list_display = ("registration", )
+    list_display = ("registration", "user")
+    search_fields = (
+        "registration",
+    )
 
 
 admin.site.register(User, UserAdmin)

@@ -1,10 +1,8 @@
-FROM python:3.12-alpine3.20
+FROM python:3.12-slim
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
-RUN apk update && \
-    apk add curl && \
-    rm -rf /var/cache/apk/*
+RUN apt update && apt install curl netcat-openbsd -y
 
 COPY requirements.txt /app
 RUN python -m pip install --upgrade pip && \
@@ -15,7 +13,7 @@ EXPOSE 8000
 #HEALTHCHECK  --start-period=30s \
 #  CMD curl http://localhost:8000/healthcheck/ || exit 1
 
-ENTRYPOINT ["sh", "create-superuser.sh"]
+ENTRYPOINT ["bash", "create-superuser.sh"]
 
 # worker should be according to the CFN config
 # --workers=WORKERS, The number of worker processes. This number should generally be between 2-4 workers per core in the server.
