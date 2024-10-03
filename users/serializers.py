@@ -1,10 +1,13 @@
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer,
 )
 from rest_framework_simplejwt.settings import api_settings
 from django.contrib.auth.models import update_last_login
-from .models import Student, Teacher
+from icecream import ic
+
+from .models import Student, Teacher, User
 
 
 class LoginViewSerializer(TokenObtainPairSerializer):
@@ -20,13 +23,74 @@ class LoginViewSerializer(TokenObtainPairSerializer):
         return data
 
 
-class TeacherSerializer(serializers.ModelSerializer):
+class UserCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'username', 'email', 'password', 'first_name', 'last_name',
+            'phone', 'user_type', 'is_verified', 'is_deleted'
+        ]
+        extra_kwargs = {
+            'username': {'validators': [UnicodeUsernameValidator()]},
+        }
+        # fields = '__all__'
+        # exclude = ['last_login', 'is_superuser', 'is_staff', 'date_joined', 'groups', 'user_permissions']
+
+
+class UserRetrieveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        # fields = '__all__'
+        exclude = ['password', ]
+
+
+class TeacherCreateSerializer(serializers.ModelSerializer):
+    user = UserCreateSerializer()
+
     class Meta:
         model = Teacher
         fields = '__all__'
 
 
+class TeacherSerializer(serializers.ModelSerializer):
+    user = UserRetrieveSerializer()
+
+    class Meta:
+        model = Teacher
+        fields = '__all__'
+
+
+class StudentCreateSerializer(serializers.ModelSerializer):
+    user = UserCreateSerializer()
+
+    class Meta:
+        model = Student
+        fields = '__all__'
+
+    def create(self, validated_data):
+        user = validated_data.pop('user')
+        print('inside serializer create')
+        print(user)
+        user = User.objects.create(**user)
+        student = Student.objects.create(user=user, **validated_data)
+        return student
+
+    def update(self, instance, validated_data):
+        try:
+            user_data = validated_data.pop('user')
+            User.objects.filter(username=user_data['username']).update(**user_data)
+            instance = super().update(instance, validated_data)
+            user = User.objects.filter(username=user_data['username']).first()
+            instance.user = user
+            instance.save()
+            return instance
+        except Exception as e:
+            ic(e)
+
+
 class StudentSerializer(serializers.ModelSerializer):
+    user = UserRetrieveSerializer()
+
     class Meta:
         model = Student
         fields = '__all__'
