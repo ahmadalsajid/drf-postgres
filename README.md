@@ -7,15 +7,23 @@ The main purpose is to demonstrate Django/DRF functionalities. For easy
 testing, We will use docker to containerize all the applications.
 
 In this system, we will build a course management system, where, there will be
-2 types of users, the teachers, and the students. For simplicity, admin will
-create the teachers, students and courses. The teachers can assign courses to
-the students, list, modify all the details. Students can view their assigned
-courses. More details to be added with the progress.
+2 types of users, the teachers, and the students. Only authenticated users can
+make `POST/PUT/PATCH/DELETE` requests.
+
+Celery is integrated to send email to both teacher and registered students for 
+any specific course on the day of the exam [see the model in 
+[models.py](./courses/models.py)].
 
 ## Docker
+Copy [sample.env](./sample.env) into [.env](./.env) and updatetbe values 
+accordingly. Then, spin up the containers by
 
 ```
 $ docker compose up
+```
+
+Once you are done, remove all the containers and associated objects by
+```
 $ docker compose down --rmi local -v
 ```
 
