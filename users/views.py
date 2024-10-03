@@ -40,7 +40,7 @@ class StudentViewSet(viewsets.ViewSet):
     def list(self, request):
         queryset = Student.objects.all()
         serializer = StudentSerializer(queryset, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
         request=PolymorphicProxySerializer(
@@ -56,12 +56,12 @@ class StudentViewSet(viewsets.ViewSet):
     )
     def create(self, request):
         _data = request.data
-        _username = _data.get("email"),
+        _username = _data.get('email'),
         try:
             with transaction.atomic():
                 if User.objects.filter(username=_username).exists():
                     return Response(
-                        {"error": "Username is not unique"},
+                        {'error': 'Username is not unique'},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
                 _serializer = StudentCreateSerializer(data=_data)
@@ -70,8 +70,8 @@ class StudentViewSet(viewsets.ViewSet):
                     _student_serializer = StudentSerializer(_new_student)
                     return Response(
                         {
-                            "detail": "Student created successfully.",
-                            "student": _student_serializer.data,
+                            'detail': 'Student created successfully.',
+                            'student': _student_serializer.data,
                         },
                         status=status.HTTP_201_CREATED,
                     )
@@ -79,7 +79,7 @@ class StudentViewSet(viewsets.ViewSet):
                     raise Exception(_serializer.errors)
 
         except IntegrityError as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
         responses=PolymorphicProxySerializer(
@@ -120,7 +120,7 @@ class StudentViewSet(viewsets.ViewSet):
                 _new_username = _data.get('user').get('username')
                 if student.user.username != _new_username and User.objects.filter(username=_new_username).exists():
                     return Response(
-                        {"error": "Username is not unique"},
+                        {'error': 'Username is not unique'},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
                 _serializer = StudentCreateSerializer(instance=student, data=_data, partial=True)
@@ -129,8 +129,8 @@ class StudentViewSet(viewsets.ViewSet):
                     _student_serializer = StudentSerializer(_student)
                     return Response(
                         {
-                            "detail": "Student partial update completed successfully.",
-                            "student": _student_serializer.data,
+                            'detail': 'Student partial update completed successfully.',
+                            'student': _student_serializer.data,
                         },
                         status=status.HTTP_200_OK,
                     )
@@ -138,7 +138,7 @@ class StudentViewSet(viewsets.ViewSet):
                     raise Exception(_serializer.errors)
 
         except IntegrityError as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None):
         try:
@@ -148,13 +148,13 @@ class StudentViewSet(viewsets.ViewSet):
             _user.delete()
             return Response(
                 {
-                    "detail": "Student deleted successfully.",
+                    'detail': 'Student deleted successfully.',
                 },
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:
             ic(e)
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TeacherViewSet(viewsets.ViewSet):
@@ -196,12 +196,12 @@ class TeacherViewSet(viewsets.ViewSet):
     )
     def create(self, request):
         _data = request.data
-        _username = _data.get("email"),
+        _username = _data.get('email'),
         try:
             with transaction.atomic():
                 if User.objects.filter(username=_username).exists():
                     return Response(
-                        {"error": "Username is not unique"},
+                        {'error': 'Username is not unique'},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
                 _serializer = TeacherCreateSerializer(data=_data)
@@ -210,8 +210,8 @@ class TeacherViewSet(viewsets.ViewSet):
                     _teacher_serializer = StudentSerializer(_new_teacher)
                     return Response(
                         {
-                            "detail": "Teacher created successfully.",
-                            "student": _teacher_serializer.data,
+                            'detail': 'Teacher created successfully.',
+                            'teacher': _teacher_serializer.data,
                         },
                         status=status.HTTP_201_CREATED,
                     )
@@ -219,7 +219,7 @@ class TeacherViewSet(viewsets.ViewSet):
                     raise Exception(_serializer.errors)
 
         except IntegrityError as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
         responses=PolymorphicProxySerializer(
@@ -260,7 +260,7 @@ class TeacherViewSet(viewsets.ViewSet):
                 _new_username = _data.get('user').get('username')
                 if teacher.user.username != _new_username and User.objects.filter(username=_new_username).exists():
                     return Response(
-                        {"error": "Username is not unique"},
+                        {'error': 'Username is not unique'},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
                 _serializer = TeacherCreateSerializer(instance=teacher, data=_data, partial=True)
@@ -269,8 +269,8 @@ class TeacherViewSet(viewsets.ViewSet):
                     _teacher_serializer = TeacherSerializer(_teacher)
                     return Response(
                         {
-                            "detail": "Teacher partial update completed successfully.",
-                            "student": _teacher_serializer.data,
+                            'detail': 'Teacher partial update completed successfully',
+                            'teacher': _teacher_serializer.data,
                         },
                         status=status.HTTP_200_OK,
                     )
@@ -278,7 +278,7 @@ class TeacherViewSet(viewsets.ViewSet):
                     raise Exception(_serializer.errors)
 
         except IntegrityError as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None):
         try:
@@ -289,10 +289,10 @@ class TeacherViewSet(viewsets.ViewSet):
             _user.delete()
             return Response(
                 {
-                    "detail": "Teacher deleted successfully.",
+                    'detail': 'Teacher deleted successfully',
                 },
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:
             ic(e)
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

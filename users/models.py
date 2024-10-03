@@ -27,14 +27,14 @@ class User(AbstractUser):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.username}::{self.user_type}"
+        return f'{self.username}::{self.user_type}'
 
     class Meta:
-        ordering = ("-created_at",)
+        ordering = ('-created_at',)
 
 
 class Teacher(models.Model):
-    user = models.OneToOneField(User, related_name="teacher", on_delete=models.CASCADE)
+    user = models.OneToOneField(User, related_name='teacher', on_delete=models.CASCADE)
     teacher_id = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -44,7 +44,7 @@ class Teacher(models.Model):
 
 
 class Student(models.Model):
-    user = models.OneToOneField(User, related_name="student", on_delete=models.CASCADE)
+    user = models.OneToOneField(User, related_name='student', on_delete=models.CASCADE)
     registration = models.CharField(max_length=8)
     name = models.CharField(max_length=50, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -54,7 +54,7 @@ class Student(models.Model):
         return f'{self.registration}: {self.user.get_full_name()}'
 
     class Meta:
-        ordering = ("-created_at",)
+        ordering = ('-created_at',)
 
 
 @receiver(post_save, sender=User)

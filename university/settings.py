@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'celery',
     'drf_spectacular',
+    'rangefilter',
 ]
 
 MIDDLEWARE = [

@@ -59,8 +59,9 @@ class TeacherCreateSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         try:
-            user_data = validated_data.pop('user')
-            User.objects.filter(username=user_data['username']).update(**user_data)
+            user_data = validated_data.pop('user') if 'user' in validated_data else None
+            if user_data:
+                User.objects.filter(username=user_data['username']).update(**user_data)
             instance = super().update(instance, validated_data)
             user = User.objects.filter(username=user_data['username']).first()
             instance.user = user
@@ -87,16 +88,15 @@ class StudentCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = validated_data.pop('user')
-        print('inside serializer create')
-        print(user)
         user = User.objects.create(**user)
         student = Student.objects.create(user=user, **validated_data)
         return student
 
     def update(self, instance, validated_data):
         try:
-            user_data = validated_data.pop('user')
-            User.objects.filter(username=user_data['username']).update(**user_data)
+            user_data = validated_data.pop('user') if 'user' in validated_data else None
+            if user_data:
+                User.objects.filter(username=user_data['username']).update(**user_data)
             instance = super().update(instance, validated_data)
             user = User.objects.filter(username=user_data['username']).first()
             instance.user = user
