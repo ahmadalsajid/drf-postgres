@@ -1,8 +1,7 @@
 from django.urls import path
-
-from users.serializers import StudentSerializer
 from users.views import (
-    StudentViewSet
+    StudentViewSet,
+    TeacherViewSet
 )
 
 urlpatterns = [
@@ -15,5 +14,15 @@ urlpatterns = [
         'put': 'update',
         'patch': 'partial_update',
         'delete': 'destroy'
-    }))
+    })),
+    path('teachers/', TeacherViewSet.as_view({
+        'get': 'list',
+        'post': 'create'
+    })),
+    path('teachers/<int:pk>/', TeacherViewSet.as_view({
+        'get': 'retrieve',
+        'put': 'update',
+        'patch': 'partial_update',
+        'delete': 'destroy'
+    })),
 ]

@@ -51,6 +51,24 @@ class TeacherCreateSerializer(serializers.ModelSerializer):
         model = Teacher
         fields = '__all__'
 
+    def create(self, validated_data):
+        user = validated_data.pop('user')
+        user = User.objects.create(**user)
+        teacher = Teacher.objects.create(user=user, **validated_data)
+        return teacher
+
+    def update(self, instance, validated_data):
+        try:
+            user_data = validated_data.pop('user')
+            User.objects.filter(username=user_data['username']).update(**user_data)
+            instance = super().update(instance, validated_data)
+            user = User.objects.filter(username=user_data['username']).first()
+            instance.user = user
+            instance.save()
+            return instance
+        except Exception as e:
+            ic(e)
+
 
 class TeacherSerializer(serializers.ModelSerializer):
     user = UserRetrieveSerializer()
