@@ -55,12 +55,9 @@ class CourseViewSet(viewsets.ViewSet):
                 _serializer = CourseCreateSerializer(data=_data)
                 if _serializer.is_valid():
                     _new_course = _serializer.save()
-                    _student_serializer = CourseSerializer(_new_course)
+                    _course_serializer = CourseSerializer(_new_course)
                     return Response(
-                        {
-                            'detail': 'Course created successfully.',
-                            'course': _student_serializer.data,
-                        },
+                        _course_serializer.data,
                         status=status.HTTP_201_CREATED,
                     )
                 else:
@@ -108,10 +105,7 @@ class CourseViewSet(viewsets.ViewSet):
                     _course = _serializer.save()
                     _course_serializer = CourseSerializer(_course)
                     return Response(
-                        {
-                            'detail': 'Course partial update completed successfully.',
-                            'course': _course_serializer.data,
-                        },
+                        _course_serializer.data,
                         status=status.HTTP_200_OK,
                     )
                 else:

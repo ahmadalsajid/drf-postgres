@@ -69,10 +69,7 @@ class StudentViewSet(viewsets.ViewSet):
                     _new_student = _serializer.save()
                     _student_serializer = StudentSerializer(_new_student)
                     return Response(
-                        {
-                            'detail': 'Student created successfully.',
-                            'student': _student_serializer.data,
-                        },
+                        _student_serializer.data,
                         status=status.HTTP_201_CREATED,
                     )
                 else:
@@ -128,10 +125,7 @@ class StudentViewSet(viewsets.ViewSet):
                     _student = _serializer.save()
                     _student_serializer = StudentSerializer(_student)
                     return Response(
-                        {
-                            'detail': 'Student partial update completed successfully.',
-                            'student': _student_serializer.data,
-                        },
+                        _student_serializer.data,
                         status=status.HTTP_200_OK,
                     )
                 else:
@@ -180,7 +174,7 @@ class TeacherViewSet(viewsets.ViewSet):
     def list(self, request):
         queryset = Teacher.objects.all()
         serializer = TeacherSerializer(queryset, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
         request=PolymorphicProxySerializer(
@@ -209,10 +203,7 @@ class TeacherViewSet(viewsets.ViewSet):
                     _new_teacher = _serializer.save()
                     _teacher_serializer = StudentSerializer(_new_teacher)
                     return Response(
-                        {
-                            'detail': 'Teacher created successfully.',
-                            'teacher': _teacher_serializer.data,
-                        },
+                        _teacher_serializer.data,
                         status=status.HTTP_201_CREATED,
                     )
                 else:
@@ -268,10 +259,7 @@ class TeacherViewSet(viewsets.ViewSet):
                     _teacher = _serializer.save()
                     _teacher_serializer = TeacherSerializer(_teacher)
                     return Response(
-                        {
-                            'detail': 'Teacher partial update completed successfully',
-                            'teacher': _teacher_serializer.data,
-                        },
+                        _teacher_serializer.data,
                         status=status.HTTP_200_OK,
                     )
                 else:
